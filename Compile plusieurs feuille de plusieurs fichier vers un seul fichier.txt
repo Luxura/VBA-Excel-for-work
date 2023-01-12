@@ -7,7 +7,7 @@ Sub copy_sheets()
     Dim destinationWorkbook As Workbook
     
     Dim sourceFolder As String
-    sourceFolder = "R:\Communs\PROPOSITION DE CREDIT\SCIM\2022\DEC 2022\DOM\PROGEM\2021-2022\"
+    sourceFolder = "C:....."
 
     'Open the destination workbook
     Set destinationWorkbook = Workbooks.Open(sourceFolder & "COMPIL.xlsx")
@@ -57,7 +57,7 @@ Python:
 import os
 from openpyxl import load_workbook
 
-source_folder = r"R:\Communs\PROPOSITION DE CREDIT\SCIM\2022\DEC 2022\DOM\PROGEM\2021-2022\"
+source_folder = r"C:"
 destination_workbook = load_workbook(source_folder + "COMPIL.xlsx")
 
 for filename in os.listdir(source_folder):
