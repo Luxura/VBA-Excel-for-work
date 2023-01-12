@@ -1,0 +1,75 @@
+
+Le code ci-dessus devrait être en mesure de copier toutes les feuilles de calcul de chaque fichier Excel source dans le fichier de destination Excel.
+
+----------------------------------------------------------------------------------------------------------------------------------------
+Sub copy_sheets()
+    Dim sourceWorkbook As Workbook
+    Dim destinationWorkbook As Workbook
+    
+    Dim sourceFolder As String
+    sourceFolder = "R:\Communs\PROPOSITION DE CREDIT\SCIM\2022\DEC 2022\DOM\PROGEM\2021-2022\"
+
+    'Open the destination workbook
+    Set destinationWorkbook = Workbooks.Open(sourceFolder & "COMPIL.xlsx")
+
+    'Initialize an empty array to store the Excel file names
+    Dim sourceFilenames() As String
+    Dim count As Long
+    count = 0
+    
+    'Use the Dir function to get the first file name in the directory
+    sourceFilename = Dir(sourceFolder & "*.xlsx")
+    
+    'Loop through all the Excel files in the directory
+    Do While sourceFilename <> ""
+        'Check if the file name is not "COMPIL.xlsx"
+        If sourceFilename <> "COMPIL.xlsx" Then
+            'Add the file name to the array
+            ReDim Preserve sourceFilenames(0 To count)
+            sourceFilenames(count) = sourceFilename
+            count = count + 1
+        End If
+        
+        'Get the next file name in the directory
+        sourceFilename = Dir()
+    Loop
+    
+    'Loop through all the file names in the array
+    For Each sourceFilename In sourceFilenames
+        'Open the source workbook
+        Set sourceWorkbook = Workbooks.Open(sourceFolder & sourceFilename)
+
+        Dim sourceSheet As Worksheet
+        For Each sourceSheet In sourceWorkbook.Worksheets
+            sourceSheet.Copy After:=destinationWorkbook.Sheets(destinationWorkbook.Sheets.count)
+        Next sourceSheet
+
+        sourceWorkbook.Close
+    Next sourceFilename
+End Sub
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+Python:
+
+import os
+from openpyxl import load_workbook
+
+source_folder = r"R:\Communs\PROPOSITION DE CREDIT\SCIM\2022\DEC 2022\DOM\PROGEM\2021-2022\"
+destination_workbook = load_workbook(source_folder + "COMPIL.xlsx")
+
+for filename in os.listdir(source_folder):
+    if filename.endswith(".xlsx") and filename != "COMPIL.xlsx":
+        source_workbook = load_workbook(source_folder + filename)
+        for sheet in source_workbook:
+            destination_workbook.create_sheet(title=sheet.title, index=destination_workbook.index(destination_workbook.active))
+            for row in sheet.iter_rows():
+                for cell in row:
+                    destination_workbook[sheet.title][cell.coordinate].value = cell.value
+        source_workbook.close()
+destination_workbook.save(source_folder + "COMPIL.xlsx")
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
